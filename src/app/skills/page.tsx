@@ -3,6 +3,7 @@ import { Users } from "lucide-react"
 import Link from "next/link"
 import { AuthButton } from "@/components/auth/auth-button"
 import { SkillsClient } from "@/components/skills/skills-client"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function SkillsPage() {
   return (
@@ -26,6 +27,7 @@ export default function SkillsPage() {
             <Link href="/resources" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
               Resources
             </Link>
+            <ThemeToggle />
             <AuthButton />
           </nav>
         </div>

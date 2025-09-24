@@ -5,6 +5,7 @@ import { Calendar, Users, Package, Shield, Lock, Zap } from "lucide-react"
 import Link from "next/link"
 import { AuthButton } from "@/components/auth/auth-button"
 import { AnimatedHero } from "@/components/animated-hero"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function Home() {
   return (
@@ -26,6 +27,7 @@ export default function Home() {
             <Link href="/skills" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
               Skills
             </Link>
+            <ThemeToggle />
             <AuthButton />
           </nav>
         </div>

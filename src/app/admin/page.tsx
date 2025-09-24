@@ -2,6 +2,7 @@ import { Shield } from "lucide-react"
 import Link from "next/link"
 import { AuthButton } from "@/components/auth/auth-button"
 import { AdminDashboard } from "@/components/admin/admin-dashboard"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function AdminPage() {
   return (
@@ -28,6 +29,7 @@ export default function AdminPage() {
             <Link href="/skills" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
               Skills
             </Link>
+            <ThemeToggle />
             <AuthButton />
           </nav>
         </div>

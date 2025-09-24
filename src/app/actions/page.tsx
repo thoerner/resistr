@@ -3,6 +3,7 @@ import { Calendar } from "lucide-react"
 import Link from "next/link"
 import { AuthButton } from "@/components/auth/auth-button"
 import { ActionsClient } from "@/components/actions/actions-client"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function ActionsPage() {
   return (
@@ -26,6 +27,7 @@ export default function ActionsPage() {
             <Link href="/skills" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
               Skills
             </Link>
+            <ThemeToggle />
             <AuthButton />
           </nav>
         </div>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { AuthButton } from "@/components/auth/auth-button"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function GuidePage() {
   return (
@@ -30,6 +31,7 @@ export default function GuidePage() {
             <Link href="/skills" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
               Skills
             </Link>
+            <ThemeToggle />
             <AuthButton />
           </nav>
         </div>
