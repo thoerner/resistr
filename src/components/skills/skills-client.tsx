@@ -24,8 +24,13 @@ const skillCategories = [
 ]
 
 export function SkillsClient() {
-  const { skills, loading, error, createSampleSkills } = useSkills()
+  const { skills, loading, error, createSampleSkills, refetch } = useSkills()
   const { isAdmin, loading: adminLoading } = useUserRole()
+  
+  const handleSkillCreated = () => {
+    // Refresh the skills list when a new skill is created
+    refetch()
+  }
   
   // Filter skills for display - show all to admins, only public to others
   const displaySkills = isAdmin ? skills : skills.filter(skill => skill.is_public)
@@ -79,7 +84,7 @@ export function SkillsClient() {
             Connect with people who have the skills you need. All participation is opt-in and privacy-focused.
           </p>
         </div>
-        <CreateSkillDialog>
+        <CreateSkillDialog onSuccess={handleSkillCreated}>
           <Button className="mt-4 sm:mt-0">
             <Plus className="h-4 w-4 mr-2" />
             Register Skills
@@ -193,7 +198,7 @@ export function SkillsClient() {
           <p className="text-slate-600 dark:text-slate-300 mb-4">
             Be the first to register your skills and help connect your community.
           </p>
-            <CreateSkillDialog>
+            <CreateSkillDialog onSuccess={handleSkillCreated}>
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
                 Register First Skills

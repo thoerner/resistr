@@ -11,6 +11,7 @@ import { useSkills } from '@/hooks/use-skills'
 
 interface CreateSkillDialogProps {
   children: React.ReactNode
+  onSuccess?: () => void
 }
 
 const skillCategories = [
@@ -24,7 +25,7 @@ const skillCategories = [
   'Other'
 ]
 
-export function CreateSkillDialog({ children }: CreateSkillDialogProps) {
+export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -56,13 +57,18 @@ export function CreateSkillDialog({ children }: CreateSkillDialogProps) {
         is_public: formData.is_public
       })
       
-      setIsOpen(false)
+      // Reset form
       setFormData({
         skill_tags: [],
         contact_method: 'admin_only',
         is_public: true
       })
       setNewTag('')
+      setError('')
+      
+      // Close dialog and notify parent
+      setIsOpen(false)
+      onSuccess?.()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to register skill')
     } finally {

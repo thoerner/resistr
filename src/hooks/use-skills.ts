@@ -76,9 +76,21 @@ export function useSkills() {
 
   const createSkill = async (skill: SkillInsert) => {
     try {
+      // Get the current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser()
+      
+      if (authError) throw authError
+      if (!user) throw new Error('User must be authenticated to create skills')
+
+      // Add the user_id to the skill object
+      const skillWithUser = {
+        ...skill,
+        user_id: user.id
+      }
+
       const { data, error } = await supabase
         .from('skills')
-        .insert(skill)
+        .insert(skillWithUser)
         .select()
         .single()
 
