@@ -1,11 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Users, Search, Plus, Shield, Eye, EyeOff, Loader2 } from "lucide-react"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Users, Search, Plus, Shield, Eye, EyeOff, Loader2, Mail, Share2 } from "lucide-react"
 import { useSkills } from "@/hooks/use-skills"
 import { useUserRole } from "@/hooks/use-user-role"
 import { CreateSkillDialog } from "./create-skill-dialog"
@@ -26,10 +28,37 @@ const skillCategories = [
 export function SkillsClient() {
   const { skills, loading, error, createSampleSkills, refetch } = useSkills()
   const { isAdmin, loading: adminLoading } = useUserRole()
+  const [contactDialogOpen, setContactDialogOpen] = useState(false)
+  const [selectedSkill, setSelectedSkill] = useState<any>(null)
   
   const handleSkillCreated = () => {
     // Refresh the skills list when a new skill is created
     refetch()
+  }
+
+  const handleContactSkill = (skill: any) => {
+    setSelectedSkill(skill)
+    setContactDialogOpen(true)
+  }
+
+  const handleShareSkill = (skill: any) => {
+    const shareText = `Check out these skills available for organizing: ${skill.skill_tags.join(', ')}`
+    const shareUrl = window.location.href
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Skills Available',
+        text: shareText,
+        url: shareUrl
+      }).catch(console.error)
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`).then(() => {
+        alert('Skill information copied to clipboard!')
+      }).catch(() => {
+        alert('Unable to copy to clipboard. Please share manually.')
+      })
+    }
   }
   
   // Filter skills for display - show all to admins, only public to others
@@ -176,10 +205,19 @@ export function SkillsClient() {
             </CardHeader>
             <CardContent>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" className="flex-1">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => handleContactSkill(skill)}
+                >
                   Contact
                 </Button>
-                <Button size="sm" variant="ghost">
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  onClick={() => handleShareSkill(skill)}
+                >
                   Share
                 </Button>
               </div>
@@ -206,6 +244,69 @@ export function SkillsClient() {
             </CreateSkillDialog>
         </div>
       )}
+
+      {/* Contact Dialog */}
+      <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center">
+              <Mail className="h-5 w-5 mr-2" />
+              Contact Information
+            </DialogTitle>
+            <DialogDescription>
+              Contact details for this skill set.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedSkill && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Available Skills
+                </label>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {selectedSkill.skill_tags.map((tag: string, index: number) => (
+                    <Badge key={index} variant="secondary">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Contact Method
+                </label>
+                <p className="text-slate-900 dark:text-white mt-1">
+                  {selectedSkill.contact_method || 'Contact through admin only'}
+                </p>
+              </div>
+              
+              {selectedSkill.contact_method && selectedSkill.contact_method !== 'admin_only' && (
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    💡 This person has provided direct contact information. You can reach out to them directly.
+                  </p>
+                </div>
+              )}
+              
+              {(!selectedSkill.contact_method || selectedSkill.contact_method === 'admin_only') && (
+                <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                  <p className="text-sm text-amber-800 dark:text-amber-200">
+                    ℹ️ This person prefers to be contacted through admin coordination. Contact an admin to get in touch.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button onClick={() => setContactDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Admin Tools */}
       {!adminLoading && isAdmin && <AdminSkillTools />}

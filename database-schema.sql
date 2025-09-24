@@ -115,13 +115,19 @@ CREATE POLICY "Users can view their own profile" ON users
 CREATE POLICY "Users can update their own profile" ON users
     FOR UPDATE USING (auth.uid() = id);
 
-CREATE POLICY "Admins can view all users" ON users
-    FOR SELECT USING (
-        EXISTS (
-            SELECT 1 FROM users 
-            WHERE id = auth.uid() AND role = 'admin'
-        )
+-- Create a function to check if user is admin (avoids circular dependency)
+CREATE OR REPLACE FUNCTION is_admin(user_id UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 FROM users 
+        WHERE id = user_id AND role = 'admin'
     );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE POLICY "Admins can view all users" ON users
+    FOR SELECT USING (is_admin(auth.uid()));
 
 -- Events policies
 CREATE POLICY "Anyone can view events" ON events

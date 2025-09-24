@@ -29,6 +29,8 @@ import {
 } from "lucide-react"
 import { useSkills } from "@/hooks/use-skills"
 import { useUserRole } from "@/hooks/use-user-role"
+import { supabase } from "@/lib/supabase"
+import { useAuth } from "@/components/auth/auth-provider"
 import type { Database } from "@/lib/supabase"
 
 type Skill = Database['public']['Tables']['skills']['Row']
@@ -49,11 +51,13 @@ const skillCategories = [
 export function AdminSkillTools() {
   const { skills, loading, error, updateSkill, deleteSkill } = useSkills()
   const { isAdmin } = useUserRole()
+  const { user } = useAuth()
   
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('All')
   const [visibilityFilter, setVisibilityFilter] = useState('all')
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
+  const [selectedUser, setSelectedUser] = useState<any>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false)
@@ -94,6 +98,42 @@ export function AdminSkillTools() {
       alert('Failed to update skill. Please try again.')
     } finally {
       setActionLoading(false)
+    }
+  }
+
+  const fetchUserData = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle() // Use maybeSingle to handle no results gracefully
+
+      if (error) {
+        console.error('Error fetching user data:', { message: error?.message, code: error?.code })
+        setSelectedUser({ 
+          id: userId, 
+          error: error.message || 'Failed to fetch user data. Check RLS/policies.' 
+        })
+        return
+      }
+
+      if (!data) {
+        console.log('No user record found in public.users for id:', userId)
+        setSelectedUser({ 
+          id: userId, 
+          error: 'No user record found in database for this ID.' 
+        })
+        return
+      }
+      
+      setSelectedUser(data)
+    } catch (e: any) {
+      console.error('Error fetching user data:', e?.message || e)
+      setSelectedUser({ 
+        id: userId, 
+        error: e?.message || 'Failed to fetch user data due to an unexpected error.' 
+      })
     }
   }
 
@@ -318,8 +358,9 @@ export function AdminSkillTools() {
                         </DropdownMenuItem>
                         
                         <DropdownMenuItem
-                          onClick={() => {
+                          onClick={async () => {
                             setSelectedSkill(skill)
+                            await fetchUserData(skill.user_id)
                             setIsContactDialogOpen(true)
                           }}
                         >
@@ -458,26 +499,83 @@ export function AdminSkillTools() {
                 </div>
               </div>
               
+              {selectedUser && (
+                <>
+                  {selectedUser.error ? (
+                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                      <p className="text-sm text-red-800 dark:text-red-200">
+                        ⚠️ {selectedUser.error}
+                      </p>
+                      <p className="text-xs text-red-600 dark:text-red-300 mt-1">
+                        User ID: {selectedUser.id}
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div>
+                        <Label>User Email</Label>
+                        <p className="text-slate-900 dark:text-white">
+                          {selectedUser.email}
+                        </p>
+                      </div>
+                      
+                      {selectedUser.username && (
+                        <div>
+                          <Label>Username</Label>
+                          <p className="text-slate-900 dark:text-white">
+                            @{selectedUser.username}
+                          </p>
+                        </div>
+                      )}
+                      
+                      {selectedUser.encrypted_contact && (
+                        <div>
+                          <Label>Encrypted Contact Info</Label>
+                          <p className="text-slate-900 dark:text-white font-mono text-sm">
+                            {selectedUser.encrypted_contact}
+                          </p>
+                        </div>
+                      )}
+                      
+                      <div>
+                        <Label>User Role</Label>
+                        <Badge variant={selectedUser.role === 'admin' ? 'default' : 'secondary'}>
+                          {selectedUser.role}
+                        </Badge>
+                      </div>
+                    </>
+                  )}
+                  
+                  <div>
+                    <Label>User ID</Label>
+                    <p className="text-slate-900 dark:text-white font-mono text-sm">
+                      {selectedUser.id}
+                    </p>
+                  </div>
+                </>
+              )}
+              
               <div>
-                <Label>Contact Method</Label>
+                <Label>Preferred Contact Method</Label>
                 <p className="text-slate-900 dark:text-white">
                   {selectedSkill.contact_method || 'Contact through admin only'}
                 </p>
               </div>
               
               <div>
-                <Label>User ID</Label>
-                <p className="text-slate-900 dark:text-white font-mono text-sm">
-                  {selectedSkill.user_id}
-                </p>
-              </div>
-              
-              <div>
-                <Label>Created</Label>
+                <Label>Skill Created</Label>
                 <p className="text-slate-900 dark:text-white">
                   {new Date(selectedSkill.created_at).toLocaleString()}
                 </p>
               </div>
+              
+              {selectedSkill.contact_method && selectedSkill.contact_method !== 'admin_only' && (
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    💡 This person has provided direct contact information and can be reached directly.
+                  </p>
+                </div>
+              )}
             </div>
           )}
           
