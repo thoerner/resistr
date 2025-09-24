@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Calendar, MapPin, Plus, Loader2 } from 'lucide-react'
 import { useActions } from '@/hooks/use-actions'
 import { useUserRole } from '@/hooks/use-user-role'
+import toast from 'react-hot-toast'
 
 interface CreateActionDialogProps {
   children: React.ReactNode
@@ -19,7 +20,7 @@ export function CreateActionDialog({ children }: CreateActionDialogProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { createAction } = useActions()
-  const { isVerified } = useUserRole()
+  const { user } = useUserRole()
 
   const [formData, setFormData] = useState({
     title: '',
@@ -30,6 +31,14 @@ export function CreateActionDialog({ children }: CreateActionDialogProps) {
   })
 
   const [newItem, setNewItem] = useState('')
+
+  const handleOpenDialog = () => {
+    if (!user) {
+      toast.error('Please sign in to create an action')
+      return
+    }
+    setIsOpen(true)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -78,16 +87,16 @@ export function CreateActionDialog({ children }: CreateActionDialogProps) {
     }))
   }
 
-  // Only show create button for verified users and admins
-  if (!isVerified) {
+  // Only show create button for logged in users
+  if (!user) {
     return null
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <div onClick={handleOpenDialog}>
         {children}
-      </DialogTrigger>
+      </div>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center">

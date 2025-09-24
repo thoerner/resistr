@@ -6,9 +6,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Package, Plus, Loader2 } from 'lucide-react'
 import { useResources } from '@/hooks/use-resources'
+import { useUserRole } from '@/hooks/use-user-role'
+import toast from 'react-hot-toast'
 
 interface CreateResourceDialogProps {
   children: React.ReactNode
@@ -29,12 +31,21 @@ export function CreateResourceDialog({ children }: CreateResourceDialogProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { createResource } = useResources()
+  const { user } = useUserRole()
 
   const [formData, setFormData] = useState({
     type: 'need' as 'need' | 'have',
     category: '',
     description: ''
   })
+
+  const handleOpenDialog = () => {
+    if (!user) {
+      toast.error('Please sign in to share resources')
+      return
+    }
+    setIsOpen(true)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,9 +74,9 @@ export function CreateResourceDialog({ children }: CreateResourceDialogProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <div onClick={handleOpenDialog}>
         {children}
-      </DialogTrigger>
+      </div>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center">

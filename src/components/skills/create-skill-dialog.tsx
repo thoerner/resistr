@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Users, Plus, Loader2 } from 'lucide-react'
 import { useSkills } from '@/hooks/use-skills'
+import { useUserRole } from '@/hooks/use-user-role'
+import toast from 'react-hot-toast'
 
 interface CreateSkillDialogProps {
   children: React.ReactNode
@@ -31,6 +33,7 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const { createSkill } = useSkills()
+  const { user } = useUserRole()
 
   const [formData, setFormData] = useState({
     skill_tags: [] as string[],
@@ -39,6 +42,14 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
   })
 
   const [newTag, setNewTag] = useState('')
+
+  const handleOpenDialog = () => {
+    if (!user) {
+      toast.error('Please sign in to register your skills')
+      return
+    }
+    setIsOpen(true)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -102,9 +113,9 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <div onClick={handleOpenDialog}>
         {children}
-      </DialogTrigger>
+      </div>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center">
