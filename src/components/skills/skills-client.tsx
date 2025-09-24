@@ -304,7 +304,7 @@ export function SkillsClient() {
               {(!selectedSkill.contact_method || selectedSkill.contact_method === 'admin_only') && (
                 <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
                   <p className="text-sm text-blue-800 dark:text-blue-200">
-                    <strong>🔒 Privacy-protected contact:</strong> This person has chosen to keep their contact information private. Contact an admin to coordinate introductions and protect everyone's privacy.
+                    <strong>🔒 Privacy-protected contact:</strong> This person has chosen to keep their contact information private. Contact an admin to coordinate introductions and protect everyone&apos;s privacy.
                   </p>
                 </div>
               )}

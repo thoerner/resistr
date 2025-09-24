@@ -154,7 +154,7 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
           <div className="space-y-2">
             <Label htmlFor="contact_method">Contact Method (Optional)</Label>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Choose how people can reach you. If you provide contact info, it will be visible when others click "Contact".
+              Choose how people can reach you. If you provide contact info, it will be visible when others click &ldquo;Contact&rdquo;.
             </p>
             <Select 
               value={formData.contact_method} 
