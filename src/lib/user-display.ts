@@ -77,7 +77,7 @@ export function getAdminDisplayName(user: UserDisplayInfo): string {
   }
 
   // Add username if different from email
-  if (user.username && user.username !== user.email.split('@')[0]) {
+  if (user.username && user.email && user.username !== user.email.split('@')[0]) {
     parts.push(`@${user.username}`)
   }
 

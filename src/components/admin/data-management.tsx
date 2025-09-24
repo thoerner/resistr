@@ -11,6 +11,11 @@ import { getUserDisplayName, getAdminDisplayName } from "@/lib/user-display"
 import { Database, Search, MoreHorizontal, Trash2, Eye, Loader2, AlertTriangle, Users, Calendar, Package, Wrench, TrendingUp, Activity } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
+type SelectedItem = {
+  type: string
+  data: any
+} | any | null
+
 export function DataManagement() {
   const { 
     stats, 
@@ -27,7 +32,7 @@ export function DataManagement() {
   
   const [activeTab, setActiveTab] = useState<'overview' | 'actions' | 'rsvps' | 'resources' | 'skills'>('overview')
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedItem, setSelectedItem] = useState<unknown>(null)
+  const [selectedItem, setSelectedItem] = useState<SelectedItem>(null)
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
