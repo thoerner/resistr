@@ -22,23 +22,23 @@ export function AuthButton() {
 
   if (user) {
     return (
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
         <UserProfile>
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 w-full sm:w-auto justify-center"
           >
             <Settings className="h-3 w-3" />
             Profile
           </Button>
         </UserProfile>
         {isAdmin && (
-          <Link href="/admin">
+          <Link href="/admin" className="w-full sm:w-auto">
             <Button 
               variant="outline" 
               size="sm" 
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 w-full justify-center"
             >
               <Shield className="h-3 w-3" />
               Admin
@@ -49,7 +49,7 @@ export function AuthButton() {
           variant="outline" 
           size="sm" 
           onClick={signOut}
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 w-full sm:w-auto justify-center"
         >
           <LogOut className="h-3 w-3" />
           Sign Out
@@ -60,7 +60,7 @@ export function AuthButton() {
 
   return (
     <SignInDialog>
-      <Button variant="outline" size="sm">
+      <Button variant="outline" size="sm" className="w-full sm:w-auto justify-center">
         Sign In
       </Button>
     </SignInDialog>
