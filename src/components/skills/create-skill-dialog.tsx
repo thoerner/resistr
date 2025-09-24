@@ -29,6 +29,7 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const { createSkill } = useSkills()
 
   const [formData, setFormData] = useState({
@@ -57,6 +58,10 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
         is_public: formData.is_public
       })
       
+      // Show success message briefly
+      setSuccess(true)
+      setError('')
+      
       // Reset form
       setFormData({
         skill_tags: [],
@@ -64,11 +69,13 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
         is_public: true
       })
       setNewTag('')
-      setError('')
       
-      // Close dialog and notify parent
-      setIsOpen(false)
+      // Notify parent and close dialog after a brief delay
       onSuccess?.()
+      setTimeout(() => {
+        setIsOpen(false)
+        setSuccess(false)
+      }, 1500)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to register skill')
     } finally {
@@ -118,8 +125,9 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                disabled={success}
               />
-              <Button type="button" onClick={addTag} size="sm">
+              <Button type="button" onClick={addTag} size="sm" disabled={success}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
@@ -148,6 +156,7 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
             <Select 
               value={formData.contact_method} 
               onValueChange={(value) => setFormData(prev => ({ ...prev, contact_method: value }))}
+              disabled={success}
             >
               <SelectTrigger>
                 <SelectValue placeholder="How can people contact you?" />
@@ -166,6 +175,7 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
             <Select 
               value={formData.is_public ? 'public' : 'private'} 
               onValueChange={(value) => setFormData(prev => ({ ...prev, is_public: value === 'public' }))}
+              disabled={success}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -183,13 +193,19 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
             </div>
           )}
 
+          {success && (
+            <div className="text-sm text-green-600 bg-green-50 dark:bg-green-900/20 p-3 rounded-md">
+              ✅ Skills registered successfully! The list will update shortly.
+            </div>
+          )}
+
           <div className="flex gap-2">
-            <Button type="submit" className="flex-1" disabled={loading}>
+            <Button type="submit" className="flex-1" disabled={loading || success}>
               {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Register Skills
+              {success ? 'Success!' : 'Register Skills'}
             </Button>
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              Cancel
+            <Button type="button" variant="outline" onClick={() => setIsOpen(false)} disabled={success}>
+              {success ? 'Closing...' : 'Cancel'}
             </Button>
           </div>
         </form>
