@@ -50,11 +50,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     })
     if (error) throw error
+    
+    // If signup was successful and we have a user, create a record in our users table
+    if (data.user) {
+      try {
+        await supabase
+          .from('users')
+          .insert({
+            id: data.user.id,
+            email: data.user.email || email,
+            role: 'public'
+          })
+      } catch (insertError) {
+        // If user already exists, that's fine - just log it
+        console.log('User already exists in users table or insert failed:', insertError)
+      }
+    }
   }
 
   const signOut = async () => {

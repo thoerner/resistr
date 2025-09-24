@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Resist - Organizing Tool",
-  description: "A secure, privacy-focused platform for event coordination, resource tracking, and skill mapping.",
+  title: "Resistr - Organizing Tool",
+  description: "A secure, privacy-focused platform for action coordination, resource tracking, and skill mapping.",
 };
 
 export default function RootLayout({

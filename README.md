@@ -1,27 +1,43 @@
-# Resist - Organizing Tool
+# Resistr - Organizing Tool
 
 A secure, privacy-focused platform for event coordination, resource tracking, and skill mapping. Built for organizers who need tools that work without compromising safety.
 
 ## 🎯 Features
 
-### Event Hub
-- Create and manage events with RSVP tracking
+### Actions Management
+- Create and manage actions/events with comprehensive tracking
 - Role-based coordination (medical, safety, logistics, general)
-- Anonymous RSVP options
-- Auto-generated flyers and QR codes
+- Anonymous participation options
+- Real-time updates and status tracking
 - Auto-purge after events (configurable, default 14 days)
+- Action categorization and filtering
 
 ### Resource Board
 - Track what's needed vs. what's available
 - Real-time updates and claiming system
 - CSV export for offline coordination
 - Categorized by type (medical, transportation, food, etc.)
+- Resource status tracking and management
 
 ### Skill Registry
 - Opt-in skill mapping and registration
 - Privacy-first contact methods (Signal, email, admin-only)
 - Admin-managed skill matching
 - Categories: Medical, Legal, Communication, Arts & Media, Technical, etc.
+- Skill availability and expertise level tracking
+
+### Admin Dashboard
+- Comprehensive user management system
+- System settings and configuration
+- Data management and export tools
+- Role-based access control
+- System monitoring and analytics
+
+### User Guide & Documentation
+- Built-in help system and user guide
+- Feature explanations and best practices
+- Privacy and security guidelines
+- Getting started tutorials
 
 ### Privacy & Security
 - All data encrypted at rest with Supabase
@@ -29,6 +45,7 @@ A secure, privacy-focused platform for event coordination, resource tracking, an
 - One-click manual purge for admins
 - User-controlled data deletion
 - Anonymous participation options
+- Row Level Security (RLS) policies on all data
 
 ## 🚀 Quick Start
 
@@ -40,7 +57,7 @@ A secure, privacy-focused platform for event coordination, resource tracking, an
 ### 1. Clone and Install
 ```bash
 git clone <your-repo-url>
-cd resist
+cd resistr
 npm install
 ```
 
@@ -59,7 +76,7 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_APP_NAME="Resist Organizing Tool"
+NEXT_PUBLIC_APP_NAME="Resistr Organizing Tool"
 NEXTAUTH_SECRET=your_nextauth_secret_here
 NEXTAUTH_URL=http://localhost:3000
 ```
@@ -85,15 +102,31 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ```
 src/
 ├── app/                    # Next.js App Router pages
-│   ├── events/            # Event management pages
+│   ├── actions/           # Actions/events management pages
+│   ├── admin/             # Admin dashboard pages
+│   ├── auth/              # Authentication pages and callbacks
+│   ├── guide/             # User guide and documentation
 │   ├── resources/         # Resource board pages
 │   ├── skills/            # Skill registry pages
-│   └── auth/              # Authentication callbacks
+│   └── layout.tsx         # Root layout with auth provider
 ├── components/
+│   ├── actions/           # Actions-related components
+│   ├── admin/             # Admin dashboard components
+│   ├── auth/              # Authentication components
+│   ├── resources/         # Resource management components
+│   ├── skills/            # Skills management components
 │   ├── ui/                # shadcn/ui components
-│   └── auth/              # Authentication components
+│   └── animated-hero.tsx  # Animated hero component
+├── hooks/                 # Custom React hooks
+│   ├── use-actions.ts     # Actions data management
+│   ├── use-admin.ts       # Admin functionality
+│   ├── use-resources.ts   # Resources data management
+│   ├── use-skills.ts      # Skills data management
+│   ├── use-users.ts       # User management
+│   └── use-system-*.ts    # System settings and data
 └── lib/
     ├── supabase.ts        # Supabase client configuration
+    ├── user-display.ts    # User display utilities
     └── utils.ts           # Utility functions
 ```
 
@@ -115,6 +148,34 @@ src/
 - Email/password authentication
 - Magic link authentication
 - Role-based access control (public, verified, admin)
+- Secure session management
+- User profile management
+
+## 👨‍💼 Admin Features
+
+### User Management
+- View and manage all user accounts
+- Assign and modify user roles (public, verified, admin)
+- User activity monitoring
+- Account status management
+
+### System Settings
+- Configure system-wide settings
+- Manage feature flags and toggles
+- System health monitoring
+- Database maintenance tools
+
+### Data Management
+- Export user data and system information
+- Data backup and restore capabilities
+- Manual data purge functionality
+- System analytics and reporting
+
+### Security Controls
+- Access log monitoring
+- Security policy enforcement
+- Data retention management
+- Privacy compliance tools
 
 ## 🚀 Deployment
 
@@ -130,7 +191,7 @@ NEXT_PUBLIC_SUPABASE_URL=your_production_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_production_service_role_key
 NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
-NEXT_PUBLIC_APP_NAME="Resist Organizing Tool"
+NEXT_PUBLIC_APP_NAME="Resistr Organizing Tool"
 NEXTAUTH_SECRET=your_production_secret
 NEXTAUTH_URL=https://your-domain.vercel.app
 ```
@@ -139,17 +200,33 @@ NEXTAUTH_URL=https://your-domain.vercel.app
 
 ### Database Schema
 The complete database schema is in `database-schema.sql`. Key tables:
-- `users` - User accounts and roles
-- `events` - Event information and metadata
+- `users` - User accounts and roles (public, verified, admin)
+- `events` - Event/action information and metadata
 - `rsvps` - Event RSVPs and role assignments
-- `resources` - Resource needs and availability
-- `skills` - User skill registrations
+- `resources` - Resource needs and availability tracking
+- `skills` - User skill registrations and contact methods
+
+The schema includes:
+- Row Level Security (RLS) policies for data protection
+- Automatic timestamp tracking with triggers
+- UUID primary keys for security
+- Proper foreign key relationships
+- Indexes for optimal query performance
 
 ### Adding New Features
 1. Create new API routes in `src/app/api/`
 2. Add new components in `src/components/`
-3. Update database schema if needed
-4. Add RLS policies for new tables
+3. Create custom hooks in `src/hooks/` for data management
+4. Update database schema if needed
+5. Add RLS policies for new tables
+6. Update the admin dashboard if needed
+
+### Development Patterns
+- **Custom Hooks**: Use the established pattern in `src/hooks/` for data management
+- **Component Structure**: Follow the component organization in `src/components/`
+- **Type Safety**: Maintain TypeScript throughout the codebase
+- **Security First**: Always implement proper RLS policies for new data
+- **Admin Integration**: Ensure new features integrate with admin dashboard when appropriate
 
 ### Testing
 ```bash
@@ -159,19 +236,31 @@ npm run lint     # Run ESLint
 
 ## 📋 Roadmap
 
-### Phase 2 (Post-MVP)
-- [ ] Volunteer dashboard with shift management
-- [ ] Broadcast system for updates
-- [ ] Media library for resources
-- [ ] Advanced admin controls
-- [ ] Anonymous suggestion system
+### ✅ Completed Features (v0.1.0)
+- [x] Actions/Events management system
+- [x] Resource tracking and management
+- [x] Skills registry and mapping
+- [x] Admin dashboard with user management
+- [x] Built-in user guide and documentation
+- [x] Enhanced authentication system
+- [x] Row Level Security (RLS) implementation
+- [x] Comprehensive UI component library
+
+### Phase 2 (Current Development)
+- [ ] Real-time notifications system
+- [ ] Advanced action templates
+- [ ] Resource sharing and collaboration features
+- [ ] Enhanced admin analytics and reporting
+- [ ] Mobile-responsive improvements
 
 ### Phase 3 (Long-term)
-- [ ] Mobile app development
+- [ ] Mobile app development (React Native)
 - [ ] Real-time chat integration
 - [ ] Calendar synchronization
+- [ ] Advanced export/import features
 - [ ] Multi-language support
 - [ ] API for third-party integrations
+- [ ] Offline capability
 
 ## 🤝 Contributing
 

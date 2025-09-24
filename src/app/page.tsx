@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Users, Package, Shield, Lock, Zap } from "lucide-react"
 import Link from "next/link"
-import { SignInDialog } from "@/components/auth/sign-in-dialog"
+import { AuthButton } from "@/components/auth/auth-button"
+import { AnimatedHero } from "@/components/animated-hero"
 
 export default function Home() {
   return (
@@ -13,11 +14,11 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Shield className="h-8 w-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Resist</h1>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Resistr</h1>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/events" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-              Events
+            <Link href="/actions" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+              Actions
             </Link>
             <Link href="/resources" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
               Resources
@@ -25,11 +26,7 @@ export default function Home() {
             <Link href="/skills" className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
               Skills
             </Link>
-            <SignInDialog>
-              <Button variant="outline" size="sm">
-                Sign In
-              </Button>
-            </SignInDialog>
+            <AuthButton />
           </nav>
         </div>
       </header>
@@ -37,24 +34,22 @@ export default function Home() {
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-16">
         <div className="text-center max-w-4xl mx-auto mb-16">
-          <Badge variant="secondary" className="mb-4">
-            <Lock className="h-3 w-3 mr-1" />
-            Privacy-First
-          </Badge>
-          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-6">
-            Organize. Coordinate. Resist.
-          </h1>
+          <AnimatedHero />
           <p className="text-xl text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
-            A secure, privacy-focused platform for event coordination, resource tracking, and skill mapping. 
+            A secure, privacy-focused platform for action coordination, resource tracking, and skill mapping. 
             Built for organizers who need tools that work without compromising safety.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8">
-              Get Started
-            </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8">
-              View Events
-            </Button>
+            <Link href="/guide">
+              <Button size="lg" className="text-lg px-8">
+                Get Started
+              </Button>
+            </Link>
+            <Link href="/actions">
+              <Button variant="outline" size="lg" className="text-lg px-8">
+                View Actions
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -63,9 +58,9 @@ export default function Home() {
           <Card className="border-0 shadow-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
             <CardHeader>
               <Calendar className="h-8 w-8 text-blue-600 mb-2" />
-              <CardTitle>Event Hub</CardTitle>
+              <CardTitle>Action Hub</CardTitle>
               <CardDescription>
-                Create and manage events with RSVP tracking, role assignments, and auto-generated flyers.
+                Create and manage actions with RSVP tracking, role assignments, and auto-generated flyers.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -73,7 +68,7 @@ export default function Home() {
                 <li>• Anonymous RSVP options</li>
                 <li>• Role-based coordination</li>
                 <li>• QR code generation</li>
-                <li>• Auto-purge after events</li>
+                <li>• Auto-purge after actions</li>
               </ul>
             </CardContent>
           </Card>

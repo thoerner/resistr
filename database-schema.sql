@@ -1,4 +1,4 @@
--- Resist Organizing Tool Database Schema
+-- Resistr Organizing Tool Database Schema
 -- This file contains the complete database schema for the protest organizing tool
 
 -- Enable necessary extensions

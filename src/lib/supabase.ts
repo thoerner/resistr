@@ -1,8 +1,16 @@
 import { createClient } from '@supabase/supabase-js'
 import { createBrowserClient } from '@supabase/ssr'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+// Validate environment variables
+if (!supabaseUrl) {
+  throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable')
+}
+if (!supabaseAnonKey) {
+  throw new Error('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable')
+}
 
 // Client-side Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
@@ -21,6 +29,7 @@ export type Database = {
           id: string
           email: string
           role: 'public' | 'verified' | 'admin'
+          username: string | null
           encrypted_contact: string | null
           created_at: string
           updated_at: string
@@ -29,6 +38,7 @@ export type Database = {
           id?: string
           email: string
           role?: 'public' | 'verified' | 'admin'
+          username?: string | null
           encrypted_contact?: string | null
           created_at?: string
           updated_at?: string
@@ -37,6 +47,7 @@ export type Database = {
           id?: string
           email?: string
           role?: 'public' | 'verified' | 'admin'
+          username?: string | null
           encrypted_contact?: string | null
           created_at?: string
           updated_at?: string
