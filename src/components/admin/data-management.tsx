@@ -6,15 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { useSystemData } from "@/hooks/use-system-data"
-import { getUserDisplayName, getAdminDisplayName } from "@/lib/user-display"
+import { useSystemData, type ActionData, type RSVPData, type ResourceData, type SkillData } from "@/hooks/use-system-data"
+import { getUserDisplayName } from "@/lib/user-display"
 import { Database, Search, MoreHorizontal, Trash2, Eye, Loader2, AlertTriangle, Users, Calendar, Package, Wrench, TrendingUp, Activity } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 type SelectedItem = {
   type: string
-  data: any
-} | any | null
+  data: ActionData | RSVPData | ResourceData | SkillData
+} | null
 
 export function DataManagement() {
   const { 
@@ -330,7 +330,7 @@ export function DataManagement() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             onClick={() => {
-                              setSelectedItem(action)
+                              setSelectedItem({ type: 'action', data: action })
                               setIsDetailDialogOpen(true)
                             }}
                           >
@@ -394,7 +394,7 @@ export function DataManagement() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             onClick={() => {
-                              setSelectedItem(rsvp)
+                              setSelectedItem({ type: 'rsvp', data: rsvp })
                               setIsDetailDialogOpen(true)
                             }}
                           >
@@ -449,7 +449,7 @@ export function DataManagement() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             onClick={() => {
-                              setSelectedItem(resource)
+                              setSelectedItem({ type: 'resource', data: resource })
                               setIsDetailDialogOpen(true)
                             }}
                           >
@@ -512,7 +512,7 @@ export function DataManagement() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             onClick={() => {
-                              setSelectedItem(skill)
+                              setSelectedItem({ type: 'skill', data: skill })
                               setIsDetailDialogOpen(true)
                             }}
                           >
@@ -597,7 +597,7 @@ export function DataManagement() {
               </Button>
               <Button 
                 variant="destructive" 
-                onClick={() => selectedItem && handleDelete(selectedItem.type, selectedItem.data.id)}
+                onClick={() => selectedItem && handleDelete(selectedItem.type as 'action' | 'resource' | 'skill', selectedItem.data.id)}
                 disabled={actionLoading}
               >
                 {actionLoading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
