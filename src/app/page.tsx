@@ -147,6 +147,16 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Inspiration */}
+        <div className="text-center py-12">
+          <div className="max-w-2xl mx-auto">
+            <p className="text-sm text-slate-500 dark:text-slate-400 italic">
+              Inspired by organizers who understand that effective resistance requires tools built with 
+              safety and solidarity at their core. For those asking "what's next?" — this is our answer.
+            </p>
+          </div>
+        </div>
       </main>
 
       {/* Footer */}
