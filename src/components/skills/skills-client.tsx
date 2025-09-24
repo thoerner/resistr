@@ -130,13 +130,20 @@ export function SkillsClient() {
         <div className="flex items-start">
           <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
           <div>
-            <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1">
+            <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
               Privacy-First Design
             </h3>
-            <p className="text-sm text-blue-800 dark:text-blue-200">
-              Only public skills are visible to everyone. Contact information is only shared with admins for coordination. 
-              You can make your skills private or delete them at any time.
-            </p>
+            <div className="text-sm text-blue-800 dark:text-blue-200 space-y-2">
+              <p>
+                <strong>You control what contact information is shared:</strong> Only your skills are visible by default. Contact info is only shared if you choose to provide it.
+              </p>
+              <p>
+                <strong>Contact sharing is completely optional:</strong> You choose how people can reach you (admin-only, Signal, email, etc.) or keep it private entirely.
+              </p>
+              <p>
+                <strong>Full control:</strong> You can make skills private, change contact methods, or delete your registration at any time.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -287,17 +294,17 @@ export function SkillsClient() {
               </div>
               
               {selectedSkill.contact_method && selectedSkill.contact_method !== 'admin_only' && (
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    💡 This person has provided direct contact information. You can reach out to them directly.
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                  <p className="text-sm text-green-800 dark:text-green-200">
+                    <strong>✅ Direct contact available:</strong> This person has chosen to share their contact information. You can reach out to them directly using the method above.
                   </p>
                 </div>
               )}
               
               {(!selectedSkill.contact_method || selectedSkill.contact_method === 'admin_only') && (
-                <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
-                  <p className="text-sm text-amber-800 dark:text-amber-200">
-                    ℹ️ This person prefers to be contacted through admin coordination. Contact an admin to get in touch.
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    <strong>🔒 Privacy-protected contact:</strong> This person has chosen to keep their contact information private. Contact an admin to coordinate introductions and protect everyone's privacy.
                   </p>
                 </div>
               )}

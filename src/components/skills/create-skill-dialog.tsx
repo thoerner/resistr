@@ -153,6 +153,9 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
 
           <div className="space-y-2">
             <Label htmlFor="contact_method">Contact Method (Optional)</Label>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Choose how people can reach you. If you provide contact info, it will be visible when others click "Contact".
+            </p>
             <Select 
               value={formData.contact_method} 
               onValueChange={(value) => setFormData(prev => ({ ...prev, contact_method: value }))}
@@ -162,16 +165,19 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
                 <SelectValue placeholder="How can people contact you?" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="admin_only">Contact through admin only</SelectItem>
-                <SelectItem value="Signal: @username">Signal handle</SelectItem>
-                <SelectItem value="Email: user@example.com">Email address</SelectItem>
-                <SelectItem value="Other">Other (specify in description)</SelectItem>
+                <SelectItem value="admin_only">🔒 Admin-only (most private)</SelectItem>
+                <SelectItem value="Signal: @username">📱 Signal handle</SelectItem>
+                <SelectItem value="Email: user@example.com">📧 Email address</SelectItem>
+                <SelectItem value="Other">💬 Other method</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
             <Label>Visibility</Label>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Choose who can see your skills. Contact information follows your chosen method regardless of visibility.
+            </p>
             <Select 
               value={formData.is_public ? 'public' : 'private'} 
               onValueChange={(value) => setFormData(prev => ({ ...prev, is_public: value === 'public' }))}
@@ -181,8 +187,8 @@ export function CreateSkillDialog({ children, onSuccess }: CreateSkillDialogProp
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="public">Public - Visible to everyone</SelectItem>
-                <SelectItem value="private">Private - Only visible to admins</SelectItem>
+                <SelectItem value="public">🌍 Public - Everyone can see your skills</SelectItem>
+                <SelectItem value="private">🔒 Private - Only admins can see your skills</SelectItem>
               </SelectContent>
             </Select>
           </div>
