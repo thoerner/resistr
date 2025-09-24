@@ -9,6 +9,7 @@ import { Users, Search, Plus, Shield, Eye, EyeOff, Loader2 } from "lucide-react"
 import { useSkills } from "@/hooks/use-skills"
 import { useUserRole } from "@/hooks/use-user-role"
 import { CreateSkillDialog } from "./create-skill-dialog"
+import { AdminSkillTools } from "./admin-skill-tools"
 
 const skillCategories = [
   "All",
@@ -25,6 +26,9 @@ const skillCategories = [
 export function SkillsClient() {
   const { skills, loading, error, createSampleSkills } = useSkills()
   const { isAdmin, loading: adminLoading } = useUserRole()
+  
+  // Filter skills for display - show all to admins, only public to others
+  const displaySkills = isAdmin ? skills : skills.filter(skill => skill.is_public)
 
   if (loading) {
     return (
@@ -136,7 +140,7 @@ export function SkillsClient() {
 
       {/* Skills Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {skills.map((skill) => (
+        {displaySkills.map((skill) => (
           <Card key={skill.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
               <div className="flex items-start justify-between">
@@ -180,7 +184,7 @@ export function SkillsClient() {
       </div>
 
       {/* Empty State */}
-      {skills.length === 0 && (
+      {displaySkills.length === 0 && (
         <div className="text-center py-12">
           <Users className="h-12 w-12 text-slate-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
@@ -198,60 +202,8 @@ export function SkillsClient() {
         </div>
       )}
 
-      {/* Admin Section (only visible to admins) */}
-      {!adminLoading && isAdmin && (
-        <div className="mt-12 pt-8 border-t">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
-              Admin Tools
-            </h2>
-            <Badge variant="outline">Admin Only</Badge>
-          </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Skill Matching</CardTitle>
-                <CardDescription>
-                  Find people with specific skills for events
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full">
-                  Search Skills
-                </Button>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Contact Management</CardTitle>
-                <CardDescription>
-                  Securely connect people with needed skills
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full">
-                  Manage Contacts
-                </Button>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Export Data</CardTitle>
-                <CardDescription>
-                  Generate skill lists for event planning
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full">
-                  Export Skills
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      )}
+      {/* Admin Tools */}
+      {!adminLoading && isAdmin && <AdminSkillTools />}
     </>
   )
 }

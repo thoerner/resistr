@@ -38,11 +38,11 @@ export function useSkills() {
         throw new Error(`Database connection failed: ${testError.message}`)
       }
       
-      // Now try the actual query
+      // Now try the actual query - fetch all skills for now
+      // In the future, we can add user role checking here
       const { data, error } = await supabase
         .from('skills')
         .select('*')
-        .eq('is_public', true)
         .order('created_at', { ascending: false })
 
       console.log('Skills query result:', { data, error })
