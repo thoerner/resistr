@@ -8,8 +8,15 @@ type Resource = Database['public']['Tables']['resources']['Row']
 type ResourceInsert = Database['public']['Tables']['resources']['Insert']
 type ResourceUpdate = Database['public']['Tables']['resources']['Update']
 
+export type ResourceWithUser = Resource & {
+  users?: {
+    email: string
+    role: string
+  } | null
+}
+
 export function useResources() {
-  const [resources, setResources] = useState<Resource[]>([])
+  const [resources, setResources] = useState<ResourceWithUser[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const supabase = createClientComponentClient()
@@ -25,11 +32,14 @@ export function useResources() {
       
       const { data, error } = await supabase
         .from('resources')
-        .select('*')
+        .select(`
+          *,
+          users!resources_user_id_fkey(email, role)
+        `)
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      setResources(data || [])
+      setResources(data as ResourceWithUser[] || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch resources')
     } finally {

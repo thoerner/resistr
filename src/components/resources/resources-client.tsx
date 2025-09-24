@@ -117,9 +117,27 @@ export function ResourcesClient() {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div>
-                        <Badge variant="outline" className="mb-2">
-                          {resource.category}
-                        </Badge>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline">
+                            {resource.category}
+                          </Badge>
+                          {/* Verification Status */}
+                          {resource.users?.role === 'public' && (
+                            <Badge variant="outline" className="text-xs text-amber-600 border-amber-300">
+                              Unverified
+                            </Badge>
+                          )}
+                          {resource.users?.role === 'verified' && (
+                            <Badge variant="default" className="text-xs bg-green-600">
+                              ✓ Verified
+                            </Badge>
+                          )}
+                          {resource.users?.role === 'admin' && (
+                            <Badge variant="default" className="text-xs bg-blue-600">
+                              👑 Admin
+                            </Badge>
+                          )}
+                        </div>
                         <CardDescription>
                           {resource.description}
                         </CardDescription>
@@ -165,9 +183,27 @@ export function ResourcesClient() {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div>
-                        <Badge variant="outline" className="mb-2">
-                          {resource.category}
-                        </Badge>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline">
+                            {resource.category}
+                          </Badge>
+                          {/* Verification Status */}
+                          {resource.users?.role === 'public' && (
+                            <Badge variant="outline" className="text-xs text-amber-600 border-amber-300">
+                              Unverified
+                            </Badge>
+                          )}
+                          {resource.users?.role === 'verified' && (
+                            <Badge variant="default" className="text-xs bg-green-600">
+                              ✓ Verified
+                            </Badge>
+                          )}
+                          {resource.users?.role === 'admin' && (
+                            <Badge variant="default" className="text-xs bg-blue-600">
+                              👑 Admin
+                            </Badge>
+                          )}
+                        </div>
                         <CardDescription>
                           {resource.description}
                         </CardDescription>

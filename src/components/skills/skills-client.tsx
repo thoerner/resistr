@@ -9,13 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Users, Search, Plus, Shield, Eye, EyeOff, Loader2, Mail } from "lucide-react"
-import { useSkills } from "@/hooks/use-skills"
+import { useSkills, type SkillWithUser } from "@/hooks/use-skills"
 import { useUserRole } from "@/hooks/use-user-role"
 import { CreateSkillDialog } from "./create-skill-dialog"
 import { AdminSkillTools } from "./admin-skill-tools"
-import type { Database } from "@/lib/supabase"
 
-type Skill = Database['public']['Tables']['skills']['Row']
 
 const skillCategories = [
   "All",
@@ -33,19 +31,19 @@ export function SkillsClient() {
   const { skills, loading, error, createSampleSkills, refetch } = useSkills()
   const { isAdmin, loading: adminLoading } = useUserRole()
   const [contactDialogOpen, setContactDialogOpen] = useState(false)
-  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
+  const [selectedSkill, setSelectedSkill] = useState<SkillWithUser | null>(null)
   
   const handleSkillCreated = () => {
     // Refresh the skills list when a new skill is created
     refetch()
   }
 
-  const handleContactSkill = (skill: Skill) => {
+  const handleContactSkill = (skill: SkillWithUser) => {
     setSelectedSkill(skill)
     setContactDialogOpen(true)
   }
 
-  const handleShareSkill = (skill: Skill) => {
+  const handleShareSkill = (skill: SkillWithUser) => {
     const shareText = `Check out these skills available for organizing: ${skill.skill_tags.join(', ')}`
     const shareUrl = window.location.href
     
@@ -201,15 +199,41 @@ export function SkillsClient() {
                     Contact: {skill.contact_method || 'Contact through admin'}
                   </CardDescription>
                 </div>
-                <div className="flex items-center">
-                  {skill.is_public ? (
-                    <div title="Public">
-                      <Eye className="h-4 w-4 text-green-500" />
+                <div className="flex items-center gap-2">
+                  {/* Verification Status */}
+                  {skill.users?.role === 'public' && (
+                    <div title="Unverified user">
+                      <Badge variant="outline" className="text-xs text-amber-600 border-amber-300">
+                        Unverified
+                      </Badge>
                     </div>
-                  ) : (
-                    <div title="Private">
-                      <EyeOff className="h-4 w-4 text-slate-400" />
+                  )}
+                  {skill.users?.role === 'verified' && (
+                    <div title="Verified user">
+                      <Badge variant="default" className="text-xs bg-green-600">
+                        ✓ Verified
+                      </Badge>
                     </div>
+                  )}
+                  {skill.users?.role === 'admin' && (
+                    <div title="Admin user">
+                      <Badge variant="default" className="text-xs bg-blue-600">
+                        👑 Admin
+                      </Badge>
+                    </div>
+                  )}
+                  
+                  {/* Visibility Status - Only show for admins */}
+                  {isAdmin && (
+                    skill.is_public ? (
+                      <div title="Public">
+                        <Eye className="h-4 w-4 text-green-500" />
+                      </div>
+                    ) : (
+                      <div title="Private">
+                        <EyeOff className="h-4 w-4 text-slate-400" />
+                      </div>
+                    )
                   )}
                 </div>
               </div>

@@ -8,8 +8,15 @@ type Skill = Database['public']['Tables']['skills']['Row']
 type SkillInsert = Database['public']['Tables']['skills']['Insert']
 type SkillUpdate = Database['public']['Tables']['skills']['Update']
 
+export type SkillWithUser = Skill & {
+  users?: {
+    email: string
+    role: string
+  } | null
+}
+
 export function useSkills() {
-  const [skills, setSkills] = useState<Skill[]>([])
+  const [skills, setSkills] = useState<SkillWithUser[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const supabase = createClientComponentClient()
@@ -38,11 +45,13 @@ export function useSkills() {
         throw new Error(`Database connection failed: ${testError.message}`)
       }
       
-      // Now try the actual query - fetch all skills for now
-      // In the future, we can add user role checking here
+      // Fetch skills with user information including role
       const { data, error } = await supabase
         .from('skills')
-        .select('*')
+        .select(`
+          *,
+          users!skills_user_id_fkey(email, role)
+        `)
         .order('created_at', { ascending: false })
 
       console.log('Skills query result:', { data, error })
@@ -58,7 +67,7 @@ export function useSkills() {
       }
       
       console.log('Skills fetched successfully:', data?.length || 0, 'skills')
-      setSkills(data || [])
+      setSkills(data as SkillWithUser[] || [])
     } catch (err) {
       console.error('Skills fetch error:', err)
       console.error('Error type:', typeof err)

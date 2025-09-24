@@ -20,7 +20,7 @@ export function CreateActionDialog({ children }: CreateActionDialogProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { createAction } = useActions()
-  const { user } = useUserRole()
+  const { user, userRole } = useUserRole()
 
   const [formData, setFormData] = useState({
     title: '',
@@ -35,6 +35,10 @@ export function CreateActionDialog({ children }: CreateActionDialogProps) {
   const handleOpenDialog = () => {
     if (!user) {
       toast.error('Please sign in to create an action')
+      return
+    }
+    if (userRole !== 'verified' && userRole !== 'admin') {
+      toast.error('Only verified users and admins can create actions')
       return
     }
     setIsOpen(true)
@@ -87,8 +91,8 @@ export function CreateActionDialog({ children }: CreateActionDialogProps) {
     }))
   }
 
-  // Only show create button for logged in users
-  if (!user) {
+  // Only show create button for verified users and admins
+  if (!user || (userRole !== 'verified' && userRole !== 'admin')) {
     return null
   }
 
