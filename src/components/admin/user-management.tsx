@@ -143,8 +143,8 @@ export function UserManagement() {
       </CardHeader>
       <CardContent>
         {/* Search and Filter Controls */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="relative flex-1">
+        <div className="flex flex-col gap-4 mb-6">
+          <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               placeholder="Search users by email..."
@@ -154,10 +154,10 @@ export function UserManagement() {
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-slate-400" />
+            <Filter className="h-4 w-4 text-slate-400 shrink-0" />
             <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder="Role" />
+              <SelectTrigger className="w-full sm:w-40">
+                <SelectValue placeholder="Filter by role" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Roles</SelectItem>
@@ -179,88 +179,96 @@ export function UserManagement() {
             filteredUsers.map((user) => (
               <div
                 key={user.id}
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                className="p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
               >
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    {getRoleIcon(user.role)}
-                    <div>
-                      <div className="font-medium text-slate-900 dark:text-white">
-                        {getAdminDisplayName({
-                          id: user.id,
-                          username: user.username,
-                          email: user.email
-                        })}
-                      </div>
-                      <div className="text-sm text-slate-500">
-                        Joined {formatDate(user.created_at)}
+                <div className="grid grid-cols-12 gap-4 items-center">
+                  {/* User Info - Takes most of the space */}
+                  <div className="col-span-12 sm:col-span-7 lg:col-span-8">
+                    <div className="flex items-center space-x-2">
+                      {getRoleIcon(user.role)}
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-slate-900 dark:text-white truncate">
+                          {user.email}
+                        </div>
+                        {user.username && (
+                          <div className="text-sm text-slate-600 dark:text-slate-400 truncate">
+                            @{user.username}
+                          </div>
+                        )}
+                        <div className="text-sm text-slate-500">
+                          Joined {formatDate(user.created_at)}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center space-x-3">
-                  <Badge variant={getRoleBadgeVariant(user.role)}>
-                    {user.role}
-                  </Badge>
+                  {/* Badge - Fixed width column */}
+                  <div className="col-span-6 sm:col-span-2 lg:col-span-1 flex justify-start sm:justify-center">
+                    <Badge variant={getRoleBadgeVariant(user.role)} className="shrink-0">
+                      {user.role}
+                    </Badge>
+                  </div>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setSelectedUser(user)
-                          setIsUserDialogOpen(true)
-                        }}
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Details
-                      </DropdownMenuItem>
-                      
-                      {user.id !== currentUser?.id && (
-                        <>
-                          <DropdownMenuItem
-                            onClick={() => handleRoleChange(user.id, 'verified')}
-                            disabled={actionLoading || user.role === 'verified'}
-                          >
-                            <UserCheck className="h-4 w-4 mr-2" />
-                            Make Verified
-                          </DropdownMenuItem>
-                          
-                          <DropdownMenuItem
-                            onClick={() => handleRoleChange(user.id, 'admin')}
-                            disabled={actionLoading || user.role === 'admin'}
-                          >
-                            <Shield className="h-4 w-4 mr-2" />
-                            Make Admin
-                          </DropdownMenuItem>
-                          
-                          <DropdownMenuItem
-                            onClick={() => handleRoleChange(user.id, 'public')}
-                            disabled={actionLoading || user.role === 'public'}
-                          >
-                            <UserX className="h-4 w-4 mr-2" />
-                            Make Public
-                          </DropdownMenuItem>
-                          
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedUser(user)
-                              setIsDeleteDialogOpen(true)
-                            }}
-                            className="text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete User
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  {/* Actions - Fixed width column */}
+                  <div className="col-span-6 sm:col-span-3 lg:col-span-3 flex justify-end">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setSelectedUser(user)
+                            setIsUserDialogOpen(true)
+                          }}
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </DropdownMenuItem>
+                        
+                        {user.id !== currentUser?.id && (
+                          <>
+                            <DropdownMenuItem
+                              onClick={() => handleRoleChange(user.id, 'verified')}
+                              disabled={actionLoading || user.role === 'verified'}
+                            >
+                              <UserCheck className="h-4 w-4 mr-2" />
+                              Make Verified
+                            </DropdownMenuItem>
+                            
+                            <DropdownMenuItem
+                              onClick={() => handleRoleChange(user.id, 'admin')}
+                              disabled={actionLoading || user.role === 'admin'}
+                            >
+                              <Shield className="h-4 w-4 mr-2" />
+                              Make Admin
+                            </DropdownMenuItem>
+                            
+                            <DropdownMenuItem
+                              onClick={() => handleRoleChange(user.id, 'public')}
+                              disabled={actionLoading || user.role === 'public'}
+                            >
+                              <UserX className="h-4 w-4 mr-2" />
+                              Make Public
+                            </DropdownMenuItem>
+                            
+                            <DropdownMenuItem
+                              onClick={() => {
+                                setSelectedUser(user)
+                                setIsDeleteDialogOpen(true)
+                              }}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete User
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
               </div>
             ))
@@ -284,6 +292,15 @@ export function UserManagement() {
                     Email
                   </label>
                   <p className="text-slate-900 dark:text-white">{selectedUser.email}</p>
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Username
+                  </label>
+                  <p className="text-slate-900 dark:text-white">
+                    {selectedUser.username ? `@${selectedUser.username}` : 'Not set'}
+                  </p>
                 </div>
                 
                 <div>

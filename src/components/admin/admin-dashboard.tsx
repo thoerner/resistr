@@ -82,10 +82,10 @@ export function AdminDashboard() {
 
       {/* Navigation Tabs */}
       <div className="border-b border-slate-200 dark:border-slate-700">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex flex-wrap gap-x-4 gap-y-2">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm cursor-pointer ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm cursor-pointer whitespace-nowrap ${
               activeTab === 'overview'
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'
@@ -95,33 +95,33 @@ export function AdminDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('users')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm cursor-pointer ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm cursor-pointer whitespace-nowrap ${
               activeTab === 'users'
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'
             }`}
           >
-            User Management
+            Users
           </button>
           <button
             onClick={() => setActiveTab('data')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm cursor-pointer ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm cursor-pointer whitespace-nowrap ${
               activeTab === 'data'
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'
             }`}
           >
-            Data Management
+            Data
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm cursor-pointer ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm cursor-pointer whitespace-nowrap ${
               activeTab === 'settings'
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'
             }`}
           >
-            System Settings
+            Settings
           </button>
         </nav>
       </div>
