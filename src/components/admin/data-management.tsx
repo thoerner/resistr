@@ -357,7 +357,7 @@ export function DataManagement() {
                     rsvp.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     rsvp.anonymous_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     rsvp.user_email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    rsvp.event_title?.toLowerCase().includes(searchTerm.toLowerCase())
+                    rsvp.action_title?.toLowerCase().includes(searchTerm.toLowerCase())
                   )
                   .map((rsvp) => (
                     <div
