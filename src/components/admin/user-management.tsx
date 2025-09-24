@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
+import toast from 'react-hot-toast'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -9,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useUsers, User } from "@/hooks/use-users"
 import { useUserRole } from "@/hooks/use-user-role"
-import { getUserDisplayName, getAdminDisplayName } from "@/lib/user-display"
 import { Users, Search, Filter, MoreHorizontal, Shield, UserCheck, UserX, Trash2, Eye, Loader2, AlertTriangle } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
@@ -36,7 +36,7 @@ export function UserManagement() {
       await updateUserRole(userId, newRole)
     } catch (error) {
       console.error('Error updating user role:', error)
-      alert('Failed to update user role. Please try again.')
+      toast.error('Failed to update user role. Please try again.')
     } finally {
       setActionLoading(false)
     }
@@ -50,7 +50,7 @@ export function UserManagement() {
       setSelectedUser(null)
     } catch (error) {
       console.error('Error deleting user:', error)
-      alert('Failed to delete user. Please try again.')
+      toast.error('Failed to delete user. Please try again.')
     } finally {
       setActionLoading(false)
     }

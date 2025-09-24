@@ -2,16 +2,20 @@
 
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import toast from 'react-hot-toast'
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Users, Search, Plus, Shield, Eye, EyeOff, Loader2, Mail, Share2 } from "lucide-react"
+import { Users, Search, Plus, Shield, Eye, EyeOff, Loader2, Mail } from "lucide-react"
 import { useSkills } from "@/hooks/use-skills"
 import { useUserRole } from "@/hooks/use-user-role"
 import { CreateSkillDialog } from "./create-skill-dialog"
 import { AdminSkillTools } from "./admin-skill-tools"
+import type { Database } from "@/lib/supabase"
+
+type Skill = Database['public']['Tables']['skills']['Row']
 
 const skillCategories = [
   "All",
@@ -29,19 +33,19 @@ export function SkillsClient() {
   const { skills, loading, error, createSampleSkills, refetch } = useSkills()
   const { isAdmin, loading: adminLoading } = useUserRole()
   const [contactDialogOpen, setContactDialogOpen] = useState(false)
-  const [selectedSkill, setSelectedSkill] = useState<any>(null)
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
   
   const handleSkillCreated = () => {
     // Refresh the skills list when a new skill is created
     refetch()
   }
 
-  const handleContactSkill = (skill: any) => {
+  const handleContactSkill = (skill: Skill) => {
     setSelectedSkill(skill)
     setContactDialogOpen(true)
   }
 
-  const handleShareSkill = (skill: any) => {
+  const handleShareSkill = (skill: Skill) => {
     const shareText = `Check out these skills available for organizing: ${skill.skill_tags.join(', ')}`
     const shareUrl = window.location.href
     
@@ -54,9 +58,9 @@ export function SkillsClient() {
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`).then(() => {
-        alert('Skill information copied to clipboard!')
+        toast.success('Skill information copied to clipboard!')
       }).catch(() => {
-        alert('Unable to copy to clipboard. Please share manually.')
+        toast.error('Unable to copy to clipboard. Please share manually.')
       })
     }
   }

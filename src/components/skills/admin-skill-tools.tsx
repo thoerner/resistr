@@ -1,18 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { 
   Search, 
-  Filter, 
   Download, 
   MoreHorizontal, 
   Eye, 
@@ -21,16 +19,13 @@ import {
   Trash2, 
   Mail, 
   Users, 
-  TrendingUp,
-  Calendar,
   Loader2,
-  AlertTriangle,
-  CheckCircle
+  AlertTriangle
 } from "lucide-react"
 import { useSkills } from "@/hooks/use-skills"
 import { useUserRole } from "@/hooks/use-user-role"
 import { supabase } from "@/lib/supabase"
-import { useAuth } from "@/components/auth/auth-provider"
+import toast from 'react-hot-toast'
 import type { Database } from "@/lib/supabase"
 
 type Skill = Database['public']['Tables']['skills']['Row']
@@ -49,15 +44,20 @@ const skillCategories = [
 ]
 
 export function AdminSkillTools() {
-  const { skills, loading, error, updateSkill, deleteSkill } = useSkills()
+  const { skills, updateSkill, deleteSkill } = useSkills()
   const { isAdmin } = useUserRole()
-  const { user } = useAuth()
   
   const [searchTerm, setSearchTerm] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState('All')
   const [visibilityFilter, setVisibilityFilter] = useState('all')
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
-  const [selectedUser, setSelectedUser] = useState<any>(null)
+  const [selectedUser, setSelectedUser] = useState<{
+    id: string
+    email?: string
+    username?: string
+    role?: string
+    encrypted_contact?: string
+    error?: string
+  } | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false)
@@ -95,7 +95,7 @@ export function AdminSkillTools() {
       setSelectedSkill(null)
     } catch (error) {
       console.error('Error updating skill:', error)
-      alert('Failed to update skill. Please try again.')
+      toast.error('Failed to update skill. Please try again.')
     } finally {
       setActionLoading(false)
     }
@@ -128,11 +128,12 @@ export function AdminSkillTools() {
       }
       
       setSelectedUser(data)
-    } catch (e: any) {
-      console.error('Error fetching user data:', e?.message || e)
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Failed to fetch user data due to an unexpected error.'
+      console.error('Error fetching user data:', errorMessage)
       setSelectedUser({ 
         id: userId, 
-        error: e?.message || 'Failed to fetch user data due to an unexpected error.' 
+        error: errorMessage
       })
     }
   }
@@ -145,7 +146,7 @@ export function AdminSkillTools() {
       setSelectedSkill(null)
     } catch (error) {
       console.error('Error deleting skill:', error)
-      alert('Failed to delete skill. Please try again.')
+      toast.error('Failed to delete skill. Please try again.')
     } finally {
       setActionLoading(false)
     }
@@ -360,8 +361,10 @@ export function AdminSkillTools() {
                         <DropdownMenuItem
                           onClick={async () => {
                             setSelectedSkill(skill)
-                            await fetchUserData(skill.user_id)
-                            setIsContactDialogOpen(true)
+                            if (skill.user_id) {
+                              await fetchUserData(skill.user_id)
+                              setIsContactDialogOpen(true)
+                            }
                           }}
                         >
                           <Mail className="h-4 w-4 mr-2" />

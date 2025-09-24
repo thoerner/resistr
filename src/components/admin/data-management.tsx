@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
+import toast from 'react-hot-toast'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -67,7 +68,7 @@ export function DataManagement() {
       setSelectedItem(null)
     } catch (error) {
       console.error(`Error deleting ${type}:`, error)
-      alert(`Failed to delete ${type}. Please try again.`)
+      toast.error(`Failed to delete ${type}. Please try again.`)
     } finally {
       setActionLoading(false)
     }

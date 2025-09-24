@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
+import toast from 'react-hot-toast'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useUserRole } from "@/hooks/use-user-role"
@@ -59,10 +60,10 @@ export function AdminDashboard() {
     try {
       // This would call the manual_purge_all_data function
       // For now, just show a success message
-      alert('Data purge functionality will be implemented with the database function')
+      toast('Data purge functionality will be implemented with the database function')
     } catch (error) {
       console.error('Error purging data:', error)
-      alert('Error purging data. Please try again.')
+      toast.error('Error purging data. Please try again.')
     } finally {
       setPurging(false)
     }
