@@ -181,36 +181,30 @@ export function UserManagement() {
                 key={user.id}
                 className="p-4 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
               >
-                <div className="grid grid-cols-12 gap-4 items-center">
-                  {/* User Info - Takes most of the space */}
-                  <div className="col-span-12 sm:col-span-7 lg:col-span-8">
-                    <div className="flex items-center space-x-2">
-                      {getRoleIcon(user.role)}
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-slate-900 dark:text-white truncate">
-                          {user.email}
+                <div className="flex items-center justify-between gap-4">
+                  {/* User Info - Flexible width */}
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    {getRoleIcon(user.role)}
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-slate-900 dark:text-white truncate">
+                        {user.email}
+                      </div>
+                      {user.username && (
+                        <div className="text-sm text-slate-600 dark:text-slate-400 truncate">
+                          @{user.username}
                         </div>
-                        {user.username && (
-                          <div className="text-sm text-slate-600 dark:text-slate-400 truncate">
-                            @{user.username}
-                          </div>
-                        )}
-                        <div className="text-sm text-slate-500">
-                          Joined {formatDate(user.created_at)}
-                        </div>
+                      )}
+                      <div className="text-sm text-slate-500">
+                        Joined {formatDate(user.created_at)}
                       </div>
                     </div>
                   </div>
 
-                  {/* Badge - Fixed width column */}
-                  <div className="col-span-6 sm:col-span-2 lg:col-span-1 flex justify-start sm:justify-center">
+                  {/* Badge and Actions - Fixed width on the right */}
+                  <div className="flex items-center gap-3 shrink-0">
                     <Badge variant={getRoleBadgeVariant(user.role)} className="shrink-0">
                       {user.role}
                     </Badge>
-                  </div>
-
-                  {/* Actions - Fixed width column */}
-                  <div className="col-span-6 sm:col-span-3 lg:col-span-3 flex justify-end">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="sm">
