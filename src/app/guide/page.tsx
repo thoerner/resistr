@@ -36,7 +36,7 @@ export default function GuidePage() {
           <CardHeader>
             <CardTitle className="flex items-center text-green-600">
               <CheckCircle className="h-5 w-5 mr-2" />
-              Quick Start (5 minutes)
+              Quick Start
             </CardTitle>
             <CardDescription>
               Get up and running with Resistr in just a few steps
