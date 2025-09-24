@@ -29,6 +29,10 @@ import {
 } from "lucide-react"
 import { useSkills } from "@/hooks/use-skills"
 import { useUserRole } from "@/hooks/use-user-role"
+import type { Database } from "@/lib/supabase"
+
+type Skill = Database['public']['Tables']['skills']['Row']
+type SkillUpdate = Database['public']['Tables']['skills']['Update']
 
 const skillCategories = [
   "All",
@@ -49,7 +53,7 @@ export function AdminSkillTools() {
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('All')
   const [visibilityFilter, setVisibilityFilter] = useState('all')
-  const [selectedSkill, setSelectedSkill] = useState<any>(null)
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false)
@@ -79,7 +83,7 @@ export function AdminSkillTools() {
     }))
   }
 
-  const handleUpdateSkill = async (skillId: string, updates: any) => {
+  const handleUpdateSkill = async (skillId: string, updates: SkillUpdate) => {
     try {
       setActionLoading(true)
       await updateSkill(skillId, updates)
