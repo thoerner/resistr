@@ -298,13 +298,13 @@ export default function GuidePage() {
           <CardContent>
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold mb-2">Can't sign in?</h4>
+                <h4 className="font-semibold mb-2">Can&apos;t sign in?</h4>
                 <p className="text-sm text-slate-600 dark:text-slate-300">
                   Try using the magic link option instead of password. Check your email spam folder for the authentication link.
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Don't see admin features?</h4>
+                <h4 className="font-semibold mb-2">Don&apos;t see admin features?</h4>
                 <p className="text-sm text-slate-600 dark:text-slate-300">
                   Admin features are only visible to users with admin role. Contact an existing admin to get promoted.
                 </p>
@@ -312,7 +312,7 @@ export default function GuidePage() {
               <div>
                 <h4 className="font-semibold mb-2">Skills not showing up?</h4>
                 <p className="text-sm text-slate-600 dark:text-slate-300">
-                  Make sure your skills are marked as "public" if you want them visible to everyone. Private skills are only visible to admins.
+                  Make sure your skills are marked as &quot;public&quot; if you want them visible to everyone. Private skills are only visible to admins.
                 </p>
               </div>
               <div>
