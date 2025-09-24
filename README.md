@@ -56,7 +56,7 @@ A secure, privacy-focused platform for event coordination, resource tracking, an
 
 ### 1. Clone and Install
 ```bash
-git clone https://github.com/thoerner/resistr 
+git clone https://github.com/thoerner/resistr.git 
 cd resistr
 npm install
 ```
